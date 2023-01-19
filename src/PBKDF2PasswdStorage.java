@@ -40,7 +40,6 @@ public class PBKDF2PasswdStorage {
         try {
             pbkdfHashedArray = pbkdfKeyFactory.generateSecret(keySpec).getEncoded() ;
         } catch (InvalidKeySpecException e) {System.out.println("Specified key specification is inappropriate"); System.out.println("Error : " + e.getMessage()); System.exit(0);}
-
         return Base64.getEncoder().encodeToString(pbkdfHashedArray);
     }
 }

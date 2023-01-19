@@ -1,26 +1,40 @@
-import java.lang.reflect.Array;
+import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Scanner;
-
+import java.util.Random;
 public class EmpowerX {
+    private static final Random RANDOM = new SecureRandom();
+    public static byte[] getNextSalt() {
+        byte[] salt = new byte[8];
+        RANDOM.nextBytes(salt);
+        return salt;
+    }
     private static void printlist(ArrayList<User> UsersList){
-        for (int i = 0;i< UsersList.size();i++){
-            String user = UsersList.get(i).getUsername();
-            String pass = UsersList.get(i).getPassword();
-            System.out.println("Username: " + user + "\tPassword: " + pass);
-        }
+        if (UsersList.get(0) != null) {
+            for (int i = 0; i < UsersList.size(); i++) {
+                String user = UsersList.get(i).getUsername();
+                String pass = UsersList.get(i).getPassword();
+                System.out.println("Username: " + user + "\tPassword: " + pass);
+            }
+        }else System.out.println("No users to print");
     }
     private static boolean Searchlist(String name, ArrayList<User> UsersList){
-        for (int i = 0;i< UsersList.size();i++){
-            String next = UsersList.get(i).getUsername();
+        if (UsersList.size() > 0) {
+            if (UsersList.get(0) != null) {
+                for (int i = 0; i < UsersList.size(); i++) {
+                    String next = UsersList.get(i).getUsername();
 
-            if (next.equalsIgnoreCase(name)){
-                return true;
+                    if (next.equalsIgnoreCase(name)) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
     }
-    private static boolean Searchlist(String name,String word, ArrayList<User> UsersList){
+    private static boolean Searchlist(String name, String word, ArrayList<User> UsersList){
         for (int i = 0;i< UsersList.size();i++){
             String user = UsersList.get(i).getUsername();
             String pass = UsersList.get(i).getPassword();
@@ -30,9 +44,14 @@ public class EmpowerX {
         }
         return false;
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        User tempuser = new User();
+        ReadWrite.initialize();
         boolean tempboolean;
         ArrayList<User> UsersList = new ArrayList<User>();
+        ReadWrite.readNewBinFile(UsersList);
+        //System.out.println(UsersList.get(0));
+       // System.out.println(UsersList.get(1));
         Boolean login = false;
         String pass;
         String username;
@@ -52,10 +71,12 @@ public class EmpowerX {
                             System.out.println("Success");
                             login = true;
                             tempboolean = false;
-                        }
+                        }else System.out.println("Invalid credentials, please try again");
                     }while (tempboolean);
                     break;
                 case 2:
+                    String salt = new String(Base64.getEncoder().encode(getNextSalt()));
+                    System.out.println(salt);
                     tempboolean = true;
                     do {
                         do {
@@ -72,12 +93,18 @@ public class EmpowerX {
                                 if (pass.length()>20) System.out.println("Password is too long please use only 20 characters");
                             }while (pass.length()>20);
                             tempboolean = false;
-                            UsersList.add(new User(pass,username));
+                            tempuser = new User(pass,username,salt);
+                            UsersList.add(UsersList.size(),tempuser);
+                            printlist(UsersList);
+                            ReadWrite.writeNewBinFile(UsersList);
                             System.out.println("Succes, Please login");
                         }
                     }while (tempboolean);
                     break;
                 case 3:
+                    if (UsersList.size() == 0){
+                        System.out.println("No users to print");
+                    }else
                     printlist(UsersList);
                     break;
             }
