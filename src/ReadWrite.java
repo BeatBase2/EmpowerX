@@ -14,36 +14,7 @@ public class ReadWrite {
     public void setFname(String fname) {
         this.fname = fname;
     }
-
-    public static void initialize() {
-    {
-        try {
-            RandomAccessFile raf = new RandomAccessFile("Users", "rw");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-}
-
-    private static final int recLen = 80;//length of one character
-
-    /* Method Name: ModifyRAF
-     * Author: Cason Cook
-     * Creation Date; October, 19, 2022
-     * Modified Date: October, 20, 2022
-     * Description: Modifys a select stat of a RAF file
-     * @Parameters: File name of raf,index of who to modify,index of what to modify, Stat to put in that place
-     * @Return Value: n/a
-     * Dependencies: java.io.*;
-     *Throws/Exceptions: throws IOException
-     */
-    private void AddUser(String Username,String Password,String Salt) throws IOException {
-      //  raf.setLength(raf.length()+80);
-        RandomAccessFile raf = new RandomAccessFile("Users","rw");
-        User newuser = new User(Password,Username,Salt);
-        raf.seek(raf.length());
-        User.writeRec(raf,(int)raf.length()/80,newuser);
-    }
+    private static final int recLen = 104;//length of one User
     /*
     From Mr.McKay ICS4U
     Name:readNewBinFile
@@ -57,6 +28,8 @@ public class ReadWrite {
         User temp = new User();
         RandomAccessFile raf = new RandomAccessFile("Users","rw");
         int numrecs = (int)raf.length()/recLen;
+        System.out.println("L:" +(int)raf.length());
+        System.out.println("n:" + numrecs);
         for (int i=0; i < numrecs; i++) {
             UsersList.add(User.readRec(raf, i));
         } //end for
@@ -71,8 +44,8 @@ public class ReadWrite {
     Throws/Exceptions: IOException
     */
     public static void writeNewBinFile(ArrayList<User> UsersList) throws IOException{
-       // raf.setLength(UsersList.size()*recLen);
         RandomAccessFile raf = new RandomAccessFile("Users","rw");
+        raf.setLength(UsersList.size()*recLen);
         for (int i=0; i < UsersList.size(); i++) {
             User.writeRec(raf,i,UsersList);
         }

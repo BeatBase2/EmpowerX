@@ -17,6 +17,7 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.util.ArrayList;
 
 public class LoginPage extends JFrame {
 
@@ -27,6 +28,7 @@ public class LoginPage extends JFrame {
 	private String password = "";
 	private String username = "";
 
+	private int index = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -48,6 +50,8 @@ public class LoginPage extends JFrame {
 	 * @throws IOException 
 	 */
 	public LoginPage() throws IOException {
+		ReadWrite.readNewBinFile(User.UsersList);
+
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, (int)size.getWidth(), (int)size.getHeight());
@@ -96,9 +100,9 @@ public class LoginPage extends JFrame {
 		contentPane.add(PassTextFieldVis);
 		PassTextFieldVis.setVisible(false);
 
-		JLabel ErrorMessage = new JLabel("Incorrect username or password");
-		ErrorMessage.setBounds(154, 194, labelwidth, labelHeight);
-		ErrorMessage.setFont(new Font("Arial", Font.PLAIN, fontSize(ErrorMessage)));
+		JLabel ErrorMessage = new JLabel("Incorrect Username or Password");
+		ErrorMessage.setBounds(PasswordLabel.getX(), PasswordLabel.getY()+labelHeight/4, labelwidth*9, labelHeight+labelHeight);
+		ErrorMessage.setFont(new Font("Arial", Font.PLAIN, fontSize(UsernameLabel)));
 		ErrorMessage.setForeground(Color.RED);
 		contentPane.add(ErrorMessage);
 		ErrorMessage.setVisible(false);
@@ -129,23 +133,25 @@ public class LoginPage extends JFrame {
 				ErrorMessage3.setVisible(false);
 				
 				username = UserTextField.getText();
-				password = getText(PassTextField);
-				
-				if(username.length() < 4) {
-					ErrorMessage2.setVisible(true);
-				}
-				
-				if(password.length() < 8 && username.length() >= 4) {
-					ErrorMessage3.setVisible(true);
-				}
-				if(username.length() > 4 && password.length() > 8){
-					contentPane.setVisible(false);
-					ICSFinalProject j;
-					try {
-						j = new ICSFinalProject();
-						j.setVisible(true);
-					} catch (IOException e1) {
-						e1.printStackTrace();
+				password = getText(PassTextField.getPassword());
+				EmpowerX.printlist(User.UsersList);
+				index = User.Searchlist(username,User.UsersList);
+				if (index == -1) {
+					ErrorMessage.setVisible(true);
+				}else {
+					//Pass: Canucks2 salt: FXUh8N/tc9c= Password: PwmN/htbh13MMxD46RafvYjncM8=  Username:CasonCook
+					if(checkpass(User.UsersList.get(index).getSalt(),User.UsersList.get(index).getPassword(),password)){
+						//Succesful login
+						contentPane.setVisible(false);
+						ICSFinalProject j;
+						try {
+							j = new ICSFinalProject();
+							j.setVisible(true);
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						}
+					}else {
+						ErrorMessage.setVisible(true);
 					}
 				}
 			}
@@ -178,7 +184,7 @@ public class LoginPage extends JFrame {
 				if(PassTextField.isVisible()) {
 					PassTextField.setVisible(false);
 					PassTextFieldVis.setVisible(true);
-					String x = getText(PassTextField);
+					String x = getText(PassTextField.getPassword());
 					PassTextFieldVis.setText(x);
 				}
 				else {
@@ -192,12 +198,28 @@ public class LoginPage extends JFrame {
 		PasswordVisibleButton.setBounds(PassTextField.getX()+PassTextField.getWidth(), PassTextField.getY(), eyepic.getWidth()+20, labelHeight);
 		contentPane.add(PasswordVisibleButton);
 	}
+
+	public static Boolean checkpass(String salt,String databasehash,String input_password) {
+		String compare = PBKDF2PasswdStorage.generatePasswdForStorage(input_password, salt);
+		System.out.println("Compare: "+compare);
+		System.out.println("Hash: " + databasehash);
+		if (databasehash.equals(compare)){
+			return true;
+		}else {
+			return false;
+		}
+	}
+
+
 	//January 17
-	public static String getText(JPasswordField j) {
-		char[] x = j.getPassword();
+	public static String getText(char [] x) {
 		String z ="";
 		for(int i = 0; i < x.length; i++) {
+			System.out.println(x[i]);
 			z = z+x[i];
+		}
+		for (int r = 0; r <x.length;r++){
+			x[r] = ' ';
 		}
 		return z;
 	}

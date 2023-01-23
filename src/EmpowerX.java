@@ -11,12 +11,13 @@ public class EmpowerX {
         RANDOM.nextBytes(salt);
         return salt;
     }
-    private static void printlist(ArrayList<User> UsersList){
+    public static void printlist(ArrayList<User> UsersList){
         if (UsersList.get(0) != null) {
             for (int i = 0; i < UsersList.size(); i++) {
                 String user = UsersList.get(i).getUsername();
                 String pass = UsersList.get(i).getPassword();
-                System.out.println("Username: " + user + "\tPassword: " + pass);
+                String salt = UsersList.get(i).getSalt();
+                System.out.println("Username: " + user + "\tPassword: " + pass + "\tSalt: " + salt);
             }
         }else System.out.println("No users to print");
     }
@@ -45,13 +46,10 @@ public class EmpowerX {
         return false;
     }
     public static void main(String[] args) throws IOException {
-        User tempuser = new User();
-        ReadWrite.initialize();
+        User tempuser;
         boolean tempboolean;
         ArrayList<User> UsersList = new ArrayList<User>();
         ReadWrite.readNewBinFile(UsersList);
-        //System.out.println(UsersList.get(0));
-       // System.out.println(UsersList.get(1));
         Boolean login = false;
         String pass;
         String username;
@@ -76,7 +74,6 @@ public class EmpowerX {
                     break;
                 case 2:
                     String salt = new String(Base64.getEncoder().encode(getNextSalt()));
-                    System.out.println(salt);
                     tempboolean = true;
                     do {
                         do {
