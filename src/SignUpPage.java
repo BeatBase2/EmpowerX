@@ -25,6 +25,7 @@ public class SignUpPage extends JFrame {
     private JTextField UserTextField;
     private JLabel PFP;
     private JPasswordField PassTextField;
+    private JTextField PassTextFieldVis;
     private String password = "";
     private String username = "";
 
@@ -93,7 +94,7 @@ public class SignUpPage extends JFrame {
         PassTextField.setFont(new Font("Arial", Font.PLAIN, fontSize(PasswordLabel)));
         contentPane.add(PassTextField);
 
-        JTextField PassTextFieldVis = new JTextField();
+        PassTextFieldVis = new JTextField();
         PassTextFieldVis.setBounds(PassTextField.getX(), PassTextField.getY()+3, PassTextField.getWidth(), PassTextField.getHeight()-6);
         PassTextFieldVis.setFont(new Font("Arial", Font.PLAIN, fontSize(UsernameLabel)));
         contentPane.add(PassTextFieldVis);
@@ -132,7 +133,8 @@ public class SignUpPage extends JFrame {
                 ErrorMessage3.setVisible(false);
 
                 username = UserTextField.getText();
-                password = getText(PassTextField.getPassword());
+                if (PassTextField.isVisible())password = getText(PassTextField.getPassword());
+                else password = PassTextFieldVis.getText();
                 if(username.length() < 4 || username.length() > 20) {
                     ErrorMessage2.setVisible(true);
                 } else if (password.length() < 8 || password.length() > 20) {
