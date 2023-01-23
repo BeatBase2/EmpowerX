@@ -134,12 +134,10 @@ public class LoginPage extends JFrame {
 				
 				username = UserTextField.getText();
 				password = getText(PassTextField.getPassword());
-				EmpowerX.printlist(User.UsersList);
 				index = User.Searchlist(username,User.UsersList);
 				if (index == -1) {
 					ErrorMessage.setVisible(true);
 				}else {
-					//Pass: Canucks2 salt: FXUh8N/tc9c= Password: PwmN/htbh13MMxD46RafvYjncM8=  Username:CasonCook
 					if(checkpass(User.UsersList.get(index).getSalt(),User.UsersList.get(index).getPassword(),password)){
 						//Succesful login
 						contentPane.setVisible(false);
@@ -201,8 +199,6 @@ public class LoginPage extends JFrame {
 
 	public static Boolean checkpass(String salt,String databasehash,String input_password) {
 		String compare = PBKDF2PasswdStorage.generatePasswdForStorage(input_password, salt);
-		System.out.println("Compare: "+compare);
-		System.out.println("Hash: " + databasehash);
 		if (databasehash.equals(compare)){
 			return true;
 		}else {
@@ -215,7 +211,6 @@ public class LoginPage extends JFrame {
 	public static String getText(char [] x) {
 		String z ="";
 		for(int i = 0; i < x.length; i++) {
-			System.out.println(x[i]);
 			z = z+x[i];
 		}
 		for (int r = 0; r <x.length;r++){

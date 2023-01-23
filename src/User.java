@@ -6,31 +6,71 @@ import java.util.Base64;
 import java.util.Random;
 
 public class User {
+
+    public static class Budget {
+
+        public int balance;
+        public int allowance;
+
+        public Budget(){
+            this.setAllowance(0);
+            this.setBalance(0);
+        }
+
+        public Budget(int all,int bal){
+            this.setAllowance(all);
+            this.setBalance(bal);
+        }
+        public int getBalance() {
+            return balance;
+        }
+
+        public int getAllowance() {
+            return allowance;
+        }
+
+        public void setAllowance(int allowance) {
+            this.allowance = allowance;
+        }
+
+        public void setBalance(int balance) {
+            this.balance = balance;
+        }
+    }
     private static final Random RANDOM = new SecureRandom();
     public static ArrayList<User> UsersList = new ArrayList<User>();
 
     private String password;// max 20 characters
     private String username;// max 20 characters
     private String salt; //12 characters
-    private static final int recLen = 104;
+    private Budget budget;
+    private static final int recLen = 120;
     public User(){
         this.setSalt("");
         this.setUsername("");
         this.setPassword("");
+        this.setBudget(budget);
     }
 
-    public User(String salt,String hash,String user){
+    public User(String salt,String hash,String user,Budget bud){
         this.setSalt(salt);
         this.setPassword(hash);
         this.setUsername(user);
+        this.setBudget(bud);
     }
 
+    public Budget getBudget() {
+        return budget;
+    }
     public String getSalt() {return salt;}
     public String getPassword() {
         return password;
     }
     public String getUsername() {
         return username;
+    }
+    public void setBudget(Budget budget) {
+        this.budget = budget;
     }
     public void setPassword(String password) {
         this.password = password;
@@ -83,21 +123,19 @@ Throws/Exceptions: throws IOException
         String temp = "";
         for (int i = 0; i < 20; i++) {
             temp = temp + raf.readChar();
-            System.out.println(i + " temp:" + temp);
         }
         obj.setUsername(temp.trim());
         temp = "";
         for (int i = 0; i < 20; i++) {
             temp = temp + raf.readChar();
-            System.out.println(i + " temp:" + temp);
         }
          obj.setPassword(temp.trim());
         temp = "";
         for (int i = 0; i < 12; i++) {
             temp = temp + raf.readChar();
-            System.out.println(i + " temp:" + temp);
         }
         obj.setSalt(temp.trim());
+        obj.setBudget(new Budget(raf.readInt(), raf.readInt()));
         return obj;
     }  // end readRec
     /*
@@ -149,5 +187,7 @@ Throws/Exceptions: throws IOException
             for (int i = 0 ; i < padLen ; i++)
                 raf.writeChar (' ');
         }
+        raf.writeInt(UsersList.get(recordNumber).getBudget().getAllowance());
+        raf.writeInt(UsersList.get(recordNumber).getBudget().getBalance());
     }
 }

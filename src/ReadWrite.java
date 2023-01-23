@@ -14,7 +14,7 @@ public class ReadWrite {
     public void setFname(String fname) {
         this.fname = fname;
     }
-    private static final int recLen = 104;//length of one User
+    private static final int recLen = 120;//length of one User
     /*
     From Mr.McKay ICS4U
     Name:readNewBinFile
@@ -28,8 +28,6 @@ public class ReadWrite {
         User temp = new User();
         RandomAccessFile raf = new RandomAccessFile("Users","rw");
         int numrecs = (int)raf.length()/recLen;
-        System.out.println("L:" +(int)raf.length());
-        System.out.println("n:" + numrecs);
         for (int i=0; i < numrecs; i++) {
             UsersList.add(User.readRec(raf, i));
         } //end for

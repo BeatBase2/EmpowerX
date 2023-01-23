@@ -133,20 +133,15 @@ public class SignUpPage extends JFrame {
 
                 username = UserTextField.getText();
                 password = getText(PassTextField.getPassword());
-                System.out.println("Username:" + username);
-                System.out.println("Pass: " + password);
                 if(username.length() < 4 || username.length() > 20) {
-                    System.out.println("1");
                     ErrorMessage2.setVisible(true);
                 } else if (password.length() < 8 || password.length() > 20) {
-                    System.out.println("2");
                     ErrorMessage2.setVisible(false);
                     ErrorMessage3.setVisible(true);
                 } else if (User.Searchlist(username,User.UsersList) == -1){
                     String salt = User.Createsalt();
                     password = PBKDF2PasswdStorage.generatePasswdForStorage(password, salt);
-                    System.out.println("salt: " + salt + " Password: " + password + "  Username:" + username);
-                    User.UsersList.add(new User(salt,password,username));
+                    User.UsersList.add(new User(salt,password,username,new User.Budget()));
                     try {
                         ReadWrite.writeNewBinFile(User.UsersList);
                     } catch (IOException ex) {

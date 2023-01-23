@@ -3,7 +3,11 @@ import javax.crypto.spec.PBEKeySpec;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
-
+/*
+* Decription: Class is used to hash the passwords
+* Retrived from: https://github.com/1MansiS/JavaCrypto/blob/main/JavaCryptoModule/SecureJavaCrypto/src/main/java/com/secure/crypto/password_storage/PBKDF2PasswdStorage.java
+* Date: Janurary 12th 202
+ */
 public class PBKDF2PasswdStorage {
     /*
     This API, returns PBKDF2 version of plain text password ready for storage
@@ -18,13 +22,9 @@ public class PBKDF2PasswdStorage {
         char[] charEnteredPassword = plainTextPasswd.toCharArray() ;
 
         PBEKeySpec keySpec = null ;
-
-        //try {
-        System.out.println("S: " + salt);
         keySpec = new PBEKeySpec(charEnteredPassword,
                 Base64.getDecoder().decode(salt),
                 100000, 20 * 6);
-        //} catch(NullPointerException|IllegalArgumentException e) {System.out.println("One of the argument is illegal. Salt " + salt + " may be of 0 length, iteration count " + "1500000" + " is not positive or derived key length " + "128" + " is not positive." ); System.out.println("Error :" + e.getMessage()); System.exit(0);}
 
         SecretKeyFactory pbkdfKeyFactory = null ;
 
