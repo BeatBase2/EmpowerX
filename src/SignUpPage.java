@@ -156,7 +156,7 @@ public class SignUpPage extends JFrame {
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                }else ErrorMessage.setVisible(true);
+                }else ErrorMessage.setVisible(true);//If user found Username already exists
             }
         });
         contentPane.add(LoginButton);

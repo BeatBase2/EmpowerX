@@ -24,7 +24,7 @@ public class User {
         public int getBalance() {
             return balance;
         }
-
+        //Budget setters and getters
         public int getAllowance() {
             return allowance;
         }
@@ -37,13 +37,13 @@ public class User {
             this.balance = balance;
         }
     }
-    private static final Random RANDOM = new SecureRandom();
-    public static ArrayList<User> UsersList = new ArrayList<User>();
+    private static final Random RANDOM = new SecureRandom();//Used to generate a salt ot hash the passwords
+    public static ArrayList<User> UsersList = new ArrayList<User>();//Stores User information
 
     private String password;// max 20 characters
     private String username;// max 20 characters
     private String salt; //12 characters
-    private Budget budget;
+    private Budget budget;// 2 ints = 8 bytes
     private static final int recLen = 120;
     public User(){
         this.setSalt("");
@@ -51,17 +51,16 @@ public class User {
         this.setPassword("");
         this.setBudget(budget);
     }
-
     public User(String salt,String hash,String user,Budget bud){
         this.setSalt(salt);
         this.setPassword(hash);
         this.setUsername(user);
         this.setBudget(bud);
     }
-
     public Budget getBudget() {
         return budget;
     }
+    //User setters and getters
     public String getSalt() {return salt;}
     public String getPassword() {
         return password;
@@ -81,12 +80,6 @@ public class User {
 
     public void setSalt(String salt) {this.salt = salt;}
 
-    /*
-        public void writeUser (RandomAccessFile raf, int num)throws IOException{
-            raf.seek(this.getUsernum() * recLen);
-        }
-
-     */
     public static String Createsalt() {
         String salt = new String(Base64.getEncoder().encode(getNextSalt()));
         return salt;
@@ -142,7 +135,7 @@ Throws/Exceptions: throws IOException
         From Mr.McKay ICS4U
         Name:writeRec
         Purpose: method to write a RAF file
-        Parameters: File name to write and number of records
+        Parameters: Raf file,Amount of individual records,Array list of user
         Return Value: n/a
         Dependencies: java.IO.*,
         Throws/Exceptions: throws IOException
@@ -161,7 +154,6 @@ Throws/Exceptions: throws IOException
             for (int i = 0 ; i < padLen ; i++)
                 raf.writeChar (' ');
         }
-        // repeat for Race
         nameLen = UsersList.get(recordNumber).getPassword().length ();
         padLen = 0;
         if (nameLen > 20)

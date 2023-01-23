@@ -136,8 +136,9 @@ public class LoginPage extends JFrame {
 				password = getText(PassTextField.getPassword());
 				index = User.Searchlist(username,User.UsersList);
 				if (index == -1) {
-					ErrorMessage.setVisible(true);
+					ErrorMessage.setVisible(true);//If user not found the username and password has to be wrong
 				}else {
+					//Use the password given and index of the username found to reverse engineer the password by hashing it again with the stored salt
 					if(checkpass(User.UsersList.get(index).getSalt(),User.UsersList.get(index).getPassword(),password)){
 						//Succesful login
 						contentPane.setVisible(false);
@@ -198,27 +199,25 @@ public class LoginPage extends JFrame {
 	}
 
 	public static Boolean checkpass(String salt,String databasehash,String input_password) {
-		String compare = PBKDF2PasswdStorage.generatePasswdForStorage(input_password, salt);
+		String compare = PBKDF2PasswdStorage.generatePasswdForStorage(input_password, salt);//Hashes user input with same salt as stored hash
 		if (databasehash.equals(compare)){
-			return true;
+			return true;//Login
 		}else {
 			return false;
 		}
 	}
-
-
 	//January 17
 	public static String getText(char [] x) {
 		String z ="";
+		//Convert Char array to string
 		for(int i = 0; i < x.length; i++) {
 			z = z+x[i];
 		}
 		for (int r = 0; r <x.length;r++){
-			x[r] = ' ';
+			x[r] = ' ';//Clear char array(More secure)
 		}
 		return z;
 	}
-	
 	//January 18
 	public int fontSize(JLabel label) {
 		 Font labelFont = label.getFont();

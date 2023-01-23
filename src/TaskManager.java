@@ -30,7 +30,6 @@ public class TaskManager extends JFrame {
 	int month = 0;
 	int day = 0;
 	int year = 2023;
-
 	/**
 	 * Launch the application.
 	 */
@@ -195,7 +194,6 @@ public class TaskManager extends JFrame {
 			// Set the label's font size to the newly determined size.
 			return fontSizeToUse;
 	}
-	
 	//January 19
 	public int fontSize(JButton button) {
 		 Font labelFont = button.getFont();
