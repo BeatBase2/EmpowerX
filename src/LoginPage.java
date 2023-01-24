@@ -27,8 +27,15 @@ public class LoginPage extends JFrame {
 	private JPasswordField PassTextField;
 	private String password = "";
 	private String username = "";
+	public static int index = 0;
+	public static int getIndex() {
+		return index;
+	}
 
-	private int index = 0;
+	public static void setIndex(int index) {
+		LoginPage.index = index;
+	}
+
 	/**
 	 * Launch the application.
 	 */
@@ -142,9 +149,9 @@ public class LoginPage extends JFrame {
 					if(checkpass(User.UsersList.get(index).getSalt(),User.UsersList.get(index).getPassword(),password)){
 						//Succesful login
 						contentPane.setVisible(false);
-						ICSFinalProject j;
+						BudgetTracker j;
 						try {
-							j = new ICSFinalProject();
+							j = new BudgetTracker();
 							j.setVisible(true);
 						} catch (IOException e1) {
 							e1.printStackTrace();
@@ -236,7 +243,7 @@ public class LoginPage extends JFrame {
 	}
 	
 	//January 19
-	public int fontSize(JButton button) {
+	public static int fontSize(JButton button) {
 		 Font labelFont = button.getFont();
 			String labelText = button.getText();
 

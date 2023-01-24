@@ -151,9 +151,9 @@ public class SignUpPage extends JFrame {
                     }
                     //Account created
                     contentPane.setVisible(false);
-                    ICSFinalProject j;
+                    LoginPage j;
                     try {
-                        j = new ICSFinalProject();
+                        j = new LoginPage();
                         j.setVisible(true);
                     } catch (IOException e1) {
                         e1.printStackTrace();
