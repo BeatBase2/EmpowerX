@@ -138,7 +138,7 @@ public class BudgetTracker extends JFrame{
 
         Clear();
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(485, 299, 320, 313);
+        scrollPane.setBounds(485, 299, 320, 180);
         contentPane.add(scrollPane);
         table_1 = new JTable(data,columnNames);
         scrollPane.setViewportView(table_1);
