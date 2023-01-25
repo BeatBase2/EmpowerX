@@ -17,7 +17,6 @@ import javax.swing.JPasswordField;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.ArrayList;
 
 public class LoginPage extends JFrame {
 
@@ -30,10 +29,6 @@ public class LoginPage extends JFrame {
 	public static int index = 0;
 	public static int getIndex() {
 		return index;
-	}
-
-	public static void setIndex(int index) {
-		LoginPage.index = index;
 	}
 
 	/**
@@ -66,7 +61,7 @@ public class LoginPage extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-						
+
 		BufferedImage myPicture = ImageIO.read(new File("LargeDefaultPFP.png"));
 		PFP = new JLabel(new ImageIcon(myPicture));
 		PFP.setBounds((int)(size.getWidth()/2)-256, 0, 512, 512);
@@ -147,7 +142,7 @@ public class LoginPage extends JFrame {
 				}else {
 					//Use the password given and index of the username found to reverse engineer the password by hashing it again with the stored salt
 					if(checkpass(User.UsersList.get(index).getSalt(),User.UsersList.get(index).getPassword(),password)){
-						//Succesful login
+						//Successful login
 						contentPane.setVisible(false);
 						ICSFinalProject j;
 						try {
@@ -207,11 +202,8 @@ public class LoginPage extends JFrame {
 
 	public static Boolean checkpass(String salt,String databasehash,String input_password) {
 		String compare = PBKDF2PasswdStorage.generatePasswdForStorage(input_password, salt);//Hashes user input with same salt as stored hash
-		if (databasehash.equals(compare)){
-			return true;//Login
-		}else {
-			return false;
-		}
+		if (databasehash.equals(compare)) return true;//Login
+		else return false;
 	}
 	//January 17
 	public static String getText(char [] x) {

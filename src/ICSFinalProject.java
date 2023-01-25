@@ -93,12 +93,13 @@ public class ICSFinalProject {
 		BudgetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
+				BudgetTracker budget = null;
 				try {
-					BudgetTracker budget = new BudgetTracker();
-					budget.setVisible(true);
-				} catch (IOException e1) {
-					e1.printStackTrace();
+					budget = new BudgetTracker();
+				} catch (IOException ex) {
+					throw new RuntimeException(ex);
 				}
+				budget.setVisible(true);
 			}
 		});
 		BudgetButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));

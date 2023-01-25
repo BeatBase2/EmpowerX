@@ -3,35 +3,21 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-
 import java.awt.Color;
-import java.util.ArrayList;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class BudgetTracker extends JFrame{
-    public static String temp;
     private JPanel contentPane;
-    public static int min;
-    public static int max;
-    public static int value;
     public double allow;
     public int bal;
+    public int tempint;
     public int spent;
     private JTable table_1;
     public static String[] columnNames = { "Name","Description","Amount" };
     public static String [][] data;
-
     /**
      * Launch the application.
      */
@@ -51,9 +37,8 @@ public class BudgetTracker extends JFrame{
      * Create the application.
      */
     public BudgetTracker() throws IOException {
-        data = new String[50][3];
         ReadWrite.readNewBinFile(User.UsersList);
-        ReadArray();
+        data = User.UsersList.get(LoginPage.getIndex()).getData();
         bal = User.UsersList.get(LoginPage.getIndex()).getBudget().getBalance();
         allow = Double.parseDouble(String.valueOf(User.UsersList.get(LoginPage.getIndex()).getBudget().getAllowance()));
         spent = User.UsersList.get(LoginPage.getIndex()).getBudget().getSpent();
@@ -66,8 +51,6 @@ public class BudgetTracker extends JFrame{
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        int labelwidth = (int) size.getWidth()/10;
-        int labelHeight = (int) size.getHeight()/18;
         int buttonwidth = (int) size.getWidth()/15;
         int buttonHeight = (int) size.getHeight()/25;
 
@@ -78,7 +61,7 @@ public class BudgetTracker extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 User.UsersList.get(LoginPage.getIndex()).getBudget().setAllowance((int)allow);
                 User.UsersList.get(LoginPage.getIndex()).getBudget().setBalance(bal);
-                User.UsersList.get(LoginPage.getIndex()).getBudget().setAmmount(spent);
+                User.UsersList.get(LoginPage.getIndex()).setData(data);
                 try {
                     ReadWrite.writeNewBinFile(User.UsersList);
                 } catch (IOException ex) {
@@ -104,7 +87,7 @@ public class BudgetTracker extends JFrame{
         allowancelabel.setBounds(750, 115, 100, 16);
         contentPane.add(allowancelabel);
 
-        JLabel Instructionlabel = new JLabel("Inset data into fields, pess when done:");
+        JLabel Instructionlabel = new JLabel("Inset data into fields, press when done:");
         Instructionlabel.setBounds(450, 275, 400, 16);
         contentPane.add(Instructionlabel);
 
@@ -120,15 +103,13 @@ public class BudgetTracker extends JFrame{
             }
         });
         contentPane.add(btnSetBalance);
-        if (spent > 0) {
-            value = User.UsersList.get(LoginPage.getIndex()).getBudget().getBalance() / spent;
-        }else value = 0;
-        min = 0;
-        max = 100;
-        JProgressBar progressBar_1 = new JProgressBar(min,max);
+        JProgressBar progressBar_1 = new JProgressBar(0,100);
         progressBar_1.setValue(0);
         progressBar_1.setBounds(491, 83, 320, 20);
         contentPane.add(progressBar_1);
+        tempint = (int) (Double.parseDouble(String.valueOf(spent))/100*allow);
+        progressBar_1.setValue(tempint);
+        progressBar_1.updateUI();
 
         JLabel ErrorMessage = new JLabel("Name length must be less than 10");
         ErrorMessage.setBounds(450, 255, 400, 16);
@@ -155,6 +136,7 @@ public class BudgetTracker extends JFrame{
         ExpenseButton.setBounds(688, 271, 117, 29);
         contentPane.add(ExpenseButton);
 
+        Clear();
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(485, 299, 320, 313);
         contentPane.add(scrollPane);
@@ -170,31 +152,26 @@ public class BudgetTracker extends JFrame{
                     for (int r = 0;r<table_1.getRowCount();r++) {
                         if ((String.valueOf(table_1.getValueAt(r, 0)).trim()).length() < 11) {
                             data[r][0] = String.valueOf(table_1.getValueAt(r, 0));
-                            User.UsersList.get(LoginPage.getIndex()).getBudget().setName(String.valueOf(table_1.getValueAt(r, 0)));
                         } else {
-                            System.out.println("b:1");
                             ErrorMessage.setVisible(true);
                             con = false;
                         }
                     }
                     for (int r = 0;r<table_1.getRowCount();r++) {
-                        System.out.println(r+":"+(table_1.getValueAt(r, 1)));
                         if ((String.valueOf(table_1.getValueAt(r, 1)).trim()).length() < 21) {
                             data[r][1] = String.valueOf(table_1.getValueAt(r, 1));
-                            User.UsersList.get(LoginPage.getIndex()).getBudget().setDescription(String.valueOf(table_1.getValueAt(r, 1)));
                         } else {
-                            System.out.println("b:2");
                             ErrorMessage.setVisible(false);
                             ErrorMessage1.setVisible(true);
                             con = false;
                         }
                     }
                     for (int r = 0;r<table_1.getRowCount();r++) {
-                        if ((String.valueOf(table_1.getValueAt(r, 2)).trim()) != ""){
+                        System.out.println("r:" +r + " d:" + (String.valueOf(table_1.getValueAt(r, 2)).trim()));
+                        if (!(String.valueOf(table_1.getValueAt(r, 2)).trim()).equals("")){
                             if (Integer.parseInt(String.valueOf(table_1.getValueAt(r, 2)).trim()) > 0){
-                                data[2][r] = String.valueOf(table_1.getValueAt(r, 2));
+                                data[r][2] = String.valueOf(table_1.getValueAt(r, 2));
                             }else {
-                                System.out.println("b:3:" + r);
                                 ErrorMessage.setVisible(false);
                                 ErrorMessage1.setVisible(false);
                                 ErrorMessage2.setVisible(true);
@@ -204,11 +181,11 @@ public class BudgetTracker extends JFrame{
                     }
                     if (con){
                         spent = sumofspent();
-                        User.UsersList.get(LoginPage.getIndex()).getBudget().setAmmount(spent);
+                        User.UsersList.get(LoginPage.getIndex()).getBudget().setSpent(spent);
+                        User.UsersList.get(LoginPage.getIndex()).setData(data);
                         spentLabel.setText("Spent:" + spent + ".0");
-                        int tempint = 0;
-                        tempint = (int) (Double.parseDouble(String.valueOf(spent))/100*allow);
-                        System.out.println(tempint);
+                        tempint = (int) ((Double.parseDouble(String.valueOf(spent))/allow)*100);
+                       // System.out.println("?:" ((Double.parseDouble(String.valueOf(spent)))/allow));
                         progressBar_1.setValue(tempint);
                         progressBar_1.updateUI();
                         try {
@@ -220,57 +197,22 @@ public class BudgetTracker extends JFrame{
             }
         });
     }
-    public static void ReadArray(){
-        for (int r = 0; r < User.UsersList.size(); r++) {
-            for (int c = 0; c < User.UsersList.size(); c++) {
-                if (c==0) {
-                    data[r][c] = User.UsersList.get(c).getBudget().getName();
-                } else if (c==1) {
-                    data[r][c] = User.UsersList.get(c).getBudget().getDescription();
-                } else if (c==2) {
-                    temp = String.valueOf(User.UsersList.get(c).getBudget().getAmmount());
-                }
-            }
-        }
-        for (int r = 0; r < 50; r++) {
-            for (int c = 0; c < 3; c++) {
-                if (data[r][c] == null || data[r][c].equalsIgnoreCase("null")) {
-                    data[r][c] = "";
-                }
-            }
-        }
-    }
-
-    public static void printArray(){
-        for (int r = 0; r < data.length; r++) {
-            for (int c = 0; c < User.UsersList.size(); c++) {
-                if (c==0) {
-                    System.out.println(data[r][c]);
-                } else if (c==1) {
-                    System.out.println(data[r][c]);
-                } else if (c==2) {
-                    System.out.println(data[r][c]);
-                }
-            }
-        }
-    }
     public static int sumofspent(){
         int sum = 0;
-        for (int r = 0; r < 50; r++) {
-            if ((String.valueOf(data[r][2])) != ""){
+        for (int r = 0; r < 10; r++) {
+            if (!(String.valueOf(data[r][2])).equals("")){
                 sum += Integer.parseInt(data[r][2]);
             }
         }
         return sum;
             }
-            public static int searchforempty(){
-            int index = -1;
-                for (int r = 0; r < data.length; r++) {
-                    if (data[r][0] == ""){
-                        index = r;
-                        return index;
+            public static void Clear(){
+                for (int i = 0; i < 10; i++) {
+                    data[i][0] = data[i][0].trim();
+                    data[i][1] = data[i][1].trim();
+                    if (Integer.parseInt(data[i][2].trim()) == 0){
+                        data[i][2] = "";
                     }
                 }
-                return index;
             }
         }

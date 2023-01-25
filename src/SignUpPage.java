@@ -1,4 +1,3 @@
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -9,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -145,12 +143,15 @@ public class SignUpPage extends JFrame {
                 } else if (User.Searchlist(username,User.UsersList) == -1){
                     String salt = User.Createsalt();
                     password = PBKDF2PasswdStorage.generatePasswdForStorage(password, salt);
-                    User.UsersList.add(new User(salt,password,username,new User.Budget()));
+                    String[][] data = new String[10][3];
+                    data = fillArray(data);
+                    User.UsersList.add(new User(salt,password,username,new User.Budget(),data));
                     try {
                         ReadWrite.writeNewBinFile(User.UsersList);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
+
                     //Account created
                     contentPane.setVisible(false);
                     LoginPage j;
@@ -232,5 +233,15 @@ public class SignUpPage extends JFrame {
         int fontSizeToUse = Math.min(newFontSize, componentHeight);
         // Set the label's font size to the newly determined size.
         return fontSizeToUse - ((int)fontSizeToUse/5*2);
+    }
+    public static String[][] fillArray(String [][] dat){
+        for (int r = 0; r < dat.length; r++) {
+            for (int c = 0; c < dat[0].length; c++) {
+                if (dat[r][c] == null || dat[r][c].equalsIgnoreCase("null")) {
+                    dat[r][c] = "";
+                }
+            }
+        }
+        return dat;
     }
 }

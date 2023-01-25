@@ -4,9 +4,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 /*
-* Decription: Class is used to hash the passwords
-* Retrived from: https://github.com/1MansiS/JavaCrypto/blob/main/JavaCryptoModule/SecureJavaCrypto/src/main/java/com/secure/crypto/password_storage/PBKDF2PasswdStorage.java
-* Date: Janurary 12th 202
+* Description: Class is used to hash the passwords
+* Retrieved from: https://github.com/1MansiS/JavaCrypto/blob/main/JavaCryptoModule/SecureJavaCrypto/src/main/java/com/secure/crypto/password_storage/PBKDF2PasswdStorage.java
+* Date: January 12th 202
  */
 public class PBKDF2PasswdStorage {
     /*
@@ -18,10 +18,10 @@ public class PBKDF2PasswdStorage {
     @return : Base64 Encoded password to be stored
      */
     public static String generatePasswdForStorage(String plainTextPasswd, String salt) {
-        // Strings are immutatable, so there is no way to change/nullify/modify its content after use. So always, collect and store security sensitive information in a char array instead.
+        // Strings are immutable, so there is no way to change/nullify/modify its content after use. So always, collect and store security sensitive information in a char array instead.
         char[] charEnteredPassword = plainTextPasswd.toCharArray() ;
 
-        PBEKeySpec keySpec = null ;
+        PBEKeySpec keySpec;
         keySpec = new PBEKeySpec(charEnteredPassword,
                 Base64.getDecoder().decode(salt),
                 100000, 20 * 6);

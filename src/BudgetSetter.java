@@ -57,8 +57,6 @@ public class BudgetSetter extends JFrame{
         setContentPane(contentPane);
         contentPane.setLayout(null);
 
-        int labelwidth = (int) size.getWidth()/10;
-        int labelHeight = (int) size.getHeight()/18;
         int buttonwidth = (int) size.getWidth()/15;
         int buttonHeight = (int) size.getHeight()/25;
 
@@ -154,10 +152,10 @@ public class BudgetSetter extends JFrame{
                 BudgetTracker j;
                 try {
                     j = new BudgetTracker();
-                    j.setVisible(true);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
                 }
+                j.setVisible(true);
             }
         });
         btnSubmitAllowance.setFont(new Font("Arial", Font.PLAIN, 19));

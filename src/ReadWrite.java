@@ -1,20 +1,9 @@
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 public class ReadWrite {
-
-    private String fname;
-
-    public ReadWrite() {
-        this.setFname("");
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-    private static final int recLen = 196;//length of one User
+    private static final int recLen = 756;//length of one User
     /*
     From Mr.McKay ICS4U
     Name:readNewBinFile
@@ -25,7 +14,6 @@ public class ReadWrite {
     Throws/Exceptions: IOException
     */
     public static void readNewBinFile(ArrayList<User> UsersList) throws IOException{
-        User temp = new User();
         RandomAccessFile raf = new RandomAccessFile("Users","rw");
         int numrecs = (int)raf.length()/recLen;//number of users
         for (int i=0; i < numrecs; i++) {

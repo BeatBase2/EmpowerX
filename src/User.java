@@ -6,64 +6,24 @@ import java.util.Base64;
 import java.util.Random;
 
 public class User {
-
     public static class Budget {
-
-        public String Name;//10
-        public String Description;//20
         public int balance;//4
         public int allowance;//4
         public int spent;//4
-        public int ammount;//4
         public Budget(){
-            this.setName("");
-            this.setDescription("");
             this.setAllowance(0);
             this.setBalance(0);
             this.setSpent(0);
-            this.setAmmount(0);
-        }
-        public Budget(String name,String desc,int all,int bal,int spent,int amt){
-            this.setName(name);
-            this.setDescription(desc);
-            this.setAllowance(all);
-            this.setBalance(bal);
-            this.setSpent(spent);
-            this.setAmmount(amt);
         }
         //Budget setters and getters
-        public String getDescription() {
-            return Description;
-        }
-        public String getName() {
-            return Name;
-        }
         public int getBalance() {
             return balance;
         }
-        //Budget setters and getters
         public int getAllowance() {
             return allowance;
         }
-
         public int getSpent() {
             return spent;
-        }
-
-        public int getAmmount() {
-            return ammount;
-        }
-
-        public void setName(String name) {
-            Name = name;
-        }
-
-        public void setDescription(String description) {
-            Description = description;
-        }
-
-        public void setAmmount(int ammount) {
-            this.ammount = ammount;
         }
 
         public void setSpent(int spent) {
@@ -81,23 +41,31 @@ public class User {
     private static final Random RANDOM = new SecureRandom();//Used to generate a salt ot hash the passwords
     public static ArrayList<User> UsersList = new ArrayList<User>();//Stores User information
 
-    private String password;// max 20 characters
-    private String username;// max 20 characters
-    private String salt; //12 characters
-    private Budget budget;// 4 ints 2 strings = 76bytes
-    //104
-    private static final int recLen = 180;
+    private String password;// max 20 characters 40
+    private String username;// max 20 characters 40
+    private String salt; //12 characters 24
+    private Budget budget;// 12
+    //116
+    private static String [][] data = new String[10][3];
+//20 40 4
+    private static final int recLen = 756;
     public User(){
         this.setSalt("");
         this.setUsername("");
         this.setPassword("");
         this.setBudget(budget);
+        this.setData(data);
     }
-    public User(String salt,String hash,String user,Budget bud){
+    public User(String salt,String hash,String user,Budget bud,String[][] dat){
         this.setSalt(salt);
         this.setPassword(hash);
         this.setUsername(user);
         this.setBudget(bud);
+        this.setData(dat);
+    }
+
+    public String[][] getData() {
+        return data;
     }
     public Budget getBudget() {
         return budget;
@@ -121,6 +89,9 @@ public class User {
     }
 
     public void setSalt(String salt) {this.salt = salt;}
+    public void setData(String[][] data) {
+        User.data = data;
+    }
 
     public static String Createsalt() {
         String salt = new String(Base64.getEncoder().encode(getNextSalt()));
@@ -157,7 +128,6 @@ Throws/Exceptions: throws IOException
         obj.setBudget(new Budget());
         raf.seek(recNum * recLen);
         String temp = "";
-        String temp1 = "";
         for (int i = 0; i < 20; i++) {
             temp = temp + raf.readChar();
         }
@@ -172,20 +142,34 @@ Throws/Exceptions: throws IOException
             temp = temp + raf.readChar();
         }
         obj.setSalt(temp.trim());
-        temp = "";
-        for (int i = 0; i < 10; i++) {
-            temp = temp + raf.readChar();
-        }
-        obj.getBudget().setName(temp.trim());
-        temp = "";
-        for (int i = 0; i < 20; i++) {
-            temp = temp + raf.readChar();
-        }
-        obj.getBudget().setDescription(temp.trim());
         obj.getBudget().setAllowance(raf.readInt());
         obj.getBudget().setBalance(raf.readInt());
         obj.getBudget().setSpent(raf.readInt());
-        obj.getBudget().setAmmount(raf.readInt());
+        for (int r = 0; r < 10; r++) {
+            for (int j = 0; j < 3; j++) {
+                if (j==0) {
+                    temp = "";
+                    for (int i = 0; i < 10; i++) {//Name
+                        temp = temp + raf.readChar();
+                    }
+                    if (temp.equals("          ")){
+                        data[r][j] = "";
+                    }else data[r][j] = temp;
+                } else if (j==1) {
+                    temp = "";
+                    for (int i = 0; i < 20; i++) {//Description
+                        temp = temp + raf.readChar();
+                    }
+                    if (temp.equals("                    ")){
+                        data[r][j] = "";
+                    }else
+                    data[r][j] = temp;
+                } else if (j==2) {//Amount
+                    data[r][j] = String.valueOf(raf.readInt());
+                }
+            }
+        }
+        obj.setData(data);
         return obj;
     }  // end readRec
     /*
@@ -236,34 +220,43 @@ Throws/Exceptions: throws IOException
             for (int i = 0 ; i < padLen ; i++)
                 raf.writeChar (' ');
         }
-        nameLen = UsersList.get(recordNumber).getBudget().getName().length();
-        padLen = 0;
-        if (nameLen > 10)
-            nameLen = 10;
-        else
-            padLen = 10 - nameLen;
-        for (int i = 0 ; i < UsersList.get(recordNumber).getBudget().getName().length();i++)
-            raf.writeChar (UsersList.get(recordNumber).getBudget().getName().charAt(i));
-        if (padLen > 0)	{
-            for (int i = 0 ; i < padLen ; i++)
-                raf.writeChar (' ');
-        }
-        nameLen = UsersList.get(recordNumber).getBudget().getDescription().length();
-        padLen = 0;
-        if (nameLen > 20)
-            nameLen = 20;
-        else
-            padLen = 20 - nameLen;
-        for (int i = 0 ; i < UsersList.get(recordNumber).getBudget().getDescription().length(); i++)
-            raf.writeChar (UsersList.get(recordNumber).getBudget().getDescription().charAt (i));
-        if (padLen > 0)	{
-            for (int i = 0 ; i < padLen ; i++)
-                raf.writeChar (' ');
-        }
-
         raf.writeInt(UsersList.get(recordNumber).getBudget().getAllowance());
         raf.writeInt(UsersList.get(recordNumber).getBudget().getBalance());
         raf.writeInt(UsersList.get(recordNumber).getBudget().getSpent());
-        raf.writeInt(UsersList.get(recordNumber).getBudget().getAmmount());
+        for (int r = 0; r < 10; r++) {
+            for (int j = 0; j < 3; j++) {
+                if (j==0){//Name
+                    nameLen = data[r][j].length();
+                    padLen = 0;
+                    if (nameLen > 10)
+                        nameLen = 10;
+                    else
+                        padLen = 10 - nameLen;
+                    for (int i = 0 ; i < data[r][j].length();i++)
+                        raf.writeChar (data[r][j].charAt(i));
+                    if (padLen > 0)	{
+                        for (int i = 0 ; i < padLen ; i++)
+                            raf.writeChar (' ');
+                    }
+                } else if (j==1) {//Description
+                    nameLen = data[r][j].length();
+                    padLen = 0;
+                    if (nameLen > 20)
+                        nameLen = 20;
+                    else
+                        padLen = 20 - nameLen;
+                    for (int i = 0 ; i < data[r][j].length();i++)
+                        raf.writeChar (data[r][j].charAt(i));
+                    if (padLen > 0)	{
+                        for (int i = 0 ; i < padLen ; i++)
+                            raf.writeChar (' ');
+                    }
+                } else if (j==2) {//Amount
+                    if (data[r][2].equals("")){
+                        raf.writeInt(0);
+                    }else raf.writeInt(Integer.parseInt(data[r][2]));
+                }
+            }
+        }
     }
 }
