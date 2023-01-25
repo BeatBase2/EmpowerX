@@ -91,9 +91,9 @@ public class BudgetTracker extends JFrame{
         Instructionlabel.setBounds(450, 275, 400, 16);
         contentPane.add(Instructionlabel);
 
-        JButton btnSetBalance = new JButton("Change Values");
+        JButton btnSetBalance = new JButton("Add Monney");
         btnSetBalance.setFont(new Font("Arial", Font.PLAIN, LoginPage.fontSize(CancelButton)));
-        btnSetBalance.setBounds(148, 40, 146, 36);
+        btnSetBalance.setBounds(buttonwidth+40, 40, buttonwidth+50, buttonHeight);
         btnSetBalance.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 contentPane.setVisible(false);
