@@ -31,6 +31,7 @@ public class User {
             this.setSpent(spent);
             this.setAmmount(amt);
         }
+        //Budget setters and getters
         public String getDescription() {
             return Description;
         }

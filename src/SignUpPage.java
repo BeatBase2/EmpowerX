@@ -20,6 +20,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+
+//Run if you have no accounts made or want to create a new one
 public class SignUpPage extends JFrame {
     private JPanel contentPane;
     private JTextField UserTextField;

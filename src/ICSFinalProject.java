@@ -1,7 +1,6 @@
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,20 +12,18 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
 import javax.swing.JToolBar;
-import javax.swing.JCheckBox;
-import javax.swing.JTable;
-import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 
-public class ICSFinalProject {
 
+//Run this file if you have made an account
+//Otherwise run sign up
+
+public class ICSFinalProject {
 	private JFrame frame;
 	TaskManager manager = new TaskManager();
-	private int fontsize = 0;
-
 	/**
 	 * Launch the application.
 	 */
@@ -65,7 +62,7 @@ public class ICSFinalProject {
 		JToolBar toolBar = new JToolBar();
 		toolBar.setBounds(6, 6, frame.getWidth(), frame.getHeight()/15);
 		frame.getContentPane().add(toolBar);
-		
+
 		//Open task management tab
 		JButton TaskManagementButton = new JButton("Task Management");
 		toolBar.add(TaskManagementButton);
@@ -76,40 +73,63 @@ public class ICSFinalProject {
 			}
 		});
 		TaskManagementButton.setBackground(new Color(102, 51, 255));
-		TaskManagementButton.setFont(new Font("Arial", Font.PLAIN, fontsize));
+		TaskManagementButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));
 			
 		//Open calendar
 		JButton CalendarButton = new JButton("Calendar");
 		CalendarButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				ScheduleCalendarGUI cal = new ScheduleCalendarGUI();
+				cal.setVisible(true);
 			}
 		});
 		
-		CalendarButton.setFont(new Font("Arial", Font.PLAIN, fontsize));
+		CalendarButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));
 		toolBar.add(CalendarButton);
 		
 		//Open Budget Tracker
 		JButton BudgetButton = new JButton("Budget Tracker");
 		BudgetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				try {
+					BudgetTracker budget = new BudgetTracker();
+					budget.setVisible(true);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
-		BudgetButton.setFont(new Font("Arial", Font.PLAIN, fontsize));
+		BudgetButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));
 		toolBar.add(BudgetButton);
 		
 		//Open work reporting
 		JButton ReportButton = new JButton("Work Reporting");
 		ReportButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+					ReportingGUI report = new ReportingGUI();
+					report.setVisible(true);
 			}
 		});
-		ReportButton.setFont(new Font("Arial", Font.PLAIN, fontsize));
+		ReportButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));
 		toolBar.add(ReportButton);
 		
 		JButton TaskListButton = new JButton("Task List");
-		TaskListButton.setFont(new Font("Arial", Font.PLAIN, fontsize));
+		TaskListButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				frame.dispose();
+				try {
+					TaskList List = new TaskList();
+					List.setVisible(true);
+				} catch (IOException | ParseException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		TaskListButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));
 		toolBar.add(TaskListButton);
-		
+		//Openlogin
 		JButton LoginButton = new JButton("Login");
 		LoginButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -122,7 +142,7 @@ public class ICSFinalProject {
 				}
 			}
 		});
-		LoginButton.setFont(new Font("Arial", Font.PLAIN, fontsize));
+		LoginButton.setFont(new Font("Arial", Font.PLAIN, fontSize(toolBar, TaskManagementButton)));
 		toolBar.add(LoginButton);		
 		
 		JLabel EmpowerXImage;
@@ -156,5 +176,22 @@ public class ICSFinalProject {
 			label.setFont(new Font(labelFont.getName(), Font.PLAIN, fontSizeToUse));
 			return fontSizeToUse;
 	}
+	//January 19
+	public int fontSize(JToolBar bar, JButton button) {
+		 Font labelFont = bar.getFont();
+			String labelText = button.getText();
+
+			int stringWidth = bar.getFontMetrics(labelFont).stringWidth(labelText);
+			int componentWidth = bar.getWidth();
+			double widthRatio = (double)componentWidth / (double)stringWidth;
+			int newFontSize = (int)(labelFont.getSize() * widthRatio);
+			int componentHeight = bar.getHeight();
+						
+			// Pick a new font size so it will not be larger than the height of label.
+			int fontSizeToUse = Math.min(newFontSize, componentHeight);
+			// Set the label's font size to the newly determined size.
+			return fontSizeToUse - ((int)fontSizeToUse/5*2);
+	}
+
 
 }

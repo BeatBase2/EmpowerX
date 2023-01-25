@@ -19,7 +19,6 @@ import javax.swing.event.ChangeEvent;
 
 public class BudgetSetter extends JFrame{
 
-    private JFrame frame;
     private JPanel contentPane;
     private JTextField BalancetextField;
     public JLabel Allowancelbl;

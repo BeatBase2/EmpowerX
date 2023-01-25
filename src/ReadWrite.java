@@ -27,7 +27,7 @@ public class ReadWrite {
     public static void readNewBinFile(ArrayList<User> UsersList) throws IOException{
         User temp = new User();
         RandomAccessFile raf = new RandomAccessFile("Users","rw");
-        int numrecs = (int)raf.length()/recLen;
+        int numrecs = (int)raf.length()/recLen;//number of users
         for (int i=0; i < numrecs; i++) {
             UsersList.add(User.readRec(raf, i));
         } //end for
@@ -44,8 +44,6 @@ public class ReadWrite {
     public static void writeNewBinFile(ArrayList<User> UsersList) throws IOException{
         RandomAccessFile raf = new RandomAccessFile("Users","rw");
         raf.setLength(UsersList.size()*recLen);
-        System.out.println(UsersList.size());
-        System.out.println(raf.length());
         for (int i=0; i < UsersList.size(); i++) {
             User.writeRec(raf,i,UsersList);
         }

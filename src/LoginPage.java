@@ -149,9 +149,9 @@ public class LoginPage extends JFrame {
 					if(checkpass(User.UsersList.get(index).getSalt(),User.UsersList.get(index).getPassword(),password)){
 						//Succesful login
 						contentPane.setVisible(false);
-						BudgetTracker j;
+						ICSFinalProject j;
 						try {
-							j = new BudgetTracker();
+							j = new ICSFinalProject();
 							j.setVisible(true);
 						} catch (IOException e1) {
 							e1.printStackTrace();

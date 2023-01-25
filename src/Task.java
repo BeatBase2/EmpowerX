@@ -1,5 +1,3 @@
-package EmpowerX;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.text.ParseException;
