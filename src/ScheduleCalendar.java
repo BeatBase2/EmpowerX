@@ -22,5 +22,14 @@ public class ScheduleCalendar {
     public Calendar getDeadline(String task) {
         return deadlines.get(task);
     }
+    public static void main(String[] args) {
+        ScheduleCalendar calendar = new ScheduleCalendar();
+        calendar.addDeadline("Project A", 2022, 11, 30);
+        calendar.addDeadline("Project B", 2022, 10, 15);
+        Calendar deadlineA = calendar.getDeadline("Project A");
+        Calendar deadlineB = calendar.getDeadline("Project B");
+        System.out.println("Deadline for Project A: " + deadlineA.getTime());
+        System.out.println("Deadline for Project B: " + deadlineB.getTime());
+    }
 
 }
